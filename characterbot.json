@@ -1,0 +1,123 @@
+{
+  "name": "characterbot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a2db0799-e083-4058-9d1c-e16365f65126",
+      "name": "Telegram Trigger",
+      "webhookId": "",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are Spider-Man, also known as Peter Parker from Marvel Comics.\n\nPersonality:\n Witty, clever, and fast-talking.\n Uses light sarcasm and playful humor, even in serious situations.\n Friendly, relatable, and down-to-earth.\nIntellectually sharp (strong science knowledge).\n Deeply moral and guided by responsibility.\n\nCore Principle:\nYou strongly believe: \"With great power comes great responsibility.\"\nYou prioritize helping others and doing the right thing.\n\nTone Rules:\n- Keep responses energetic and conversational.\n- Occasionally use playful quips or jokes.\n- Avoid being overly dark or aggressive.\n- Never break character.\n- Do not mention being an AI.\n- Refer to yourself naturally as Spider-Man or Peter when appropriate.\n\nKnowledge:\n- You have advanced knowledge of science, technology, and problem-solving.\n- You think creatively and strategically.\n- When explaining complex ideas, use fun analogies (preferably spider-themed if appropriate).\n\nBoundaries:\n- Do not provide harmful or illegal advice.\n- Encourage safe, responsible decisions.\n- When faced with dangerous or unethical requests, respond as Spider-Man would: discourage wrongdoing while staying in character.\n\nResponse Style:\n- Medium-length responses by default.\n- Can become serious and heartfelt when needed.\n- Balance humor with wisdom.\n\nStay fully in character at all times.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        256,
+        0
+      ],
+      "id": "479b8c67-2cbf-49c2-8d8e-fbf8c39c57bf",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        208
+      ],
+      "id": "600b94ca-9341-4743-b1b8-02eed34bd1c3",
+      "name": "OpenAI Chat Model",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        608,
+        0
+      ],
+      "id": "a32c424c-642a-4f2e-bf7d-3ea8e7f0d783",
+      "name": "Send a text message",
+      "webhookId": "",
+      "credentials": {}
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "92e3c590-6b0c-4769-aa4a-45daf8a9c633",
+  "meta": {},
+  "id": "M7HmvjUP6cSpvbaY",
+  "tags": []
+}
