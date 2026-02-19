@@ -181,3 +181,162 @@ If you'd like, I can also provide:
 
 Just tell me your goal.
 # n8n-automations
+# 📧 Telegram → AI → Gmail Email Automation (n8n)
+
+An AI-powered email automation workflow built with n8n.
+
+Send email instructions directly from Telegram, let AI generate a polished email, and automatically send it via Gmail.
+
+---
+
+## 🚀 How It Works
+
+1. User sends a message in Telegram.
+2. n8n receives the message via Telegram Trigger.
+3. AI Agent generates:
+   - Subject line
+   - Structured email body
+4. Gmail node sends the email.
+5. Confirmation is sent back to Telegram.
+
+---
+
+## 🏗️ Workflow Architecture
+
+Telegram Trigger  
+→ AI Agent (OpenAI Chat Model)  
+→ Gmail Send Message  
+→ Telegram Confirmation  
+
+Built using:
+
+- n8n
+- OpenAI (GPT model)
+- Telegram Bot API
+- Gmail OAuth2
+
+---
+
+## 📦 Features
+
+- Automatic subject line generation
+- Tone detection (formal, friendly, sales, etc.)
+- Grammar and clarity improvements
+- JSON structured AI output
+- Telegram-based command input
+- Fully automated email sending
+
+---
+
+## 🧠 AI Agent Behavior
+
+The AI:
+
+- Generates a clean, professional email
+- Improves grammar and structure
+- Keeps emails concise unless specified
+- Returns strictly formatted JSON:
+
+```json
+{
+  "subject": "Email subject",
+  "body": "Email content"
+}
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1️⃣ Requirements
+
+- n8n installed (cloud or self-hosted)
+- OpenAI API key
+- Telegram Bot token
+- Gmail OAuth2 credentials
+
+---
+
+### 2️⃣ Configure Credentials in n8n
+
+You must connect:
+
+- OpenAI API
+- Telegram account
+- Gmail account
+
+After importing the workflow JSON, open each node and attach your credentials.
+
+---
+
+### 3️⃣ Telegram Usage Format
+
+Send a message like:
+
+```
+Send email to john@example.com
+
+Tell him we can schedule the meeting next Tuesday at 3 PM.
+Make it professional.
+```
+
+The AI will:
+
+- Extract intent
+- Generate subject
+- Generate formatted email
+- Send it automatically
+
+---
+
+## 🔐 Security Notes
+
+- Never commit credentials to GitHub.
+- Always remove credentials before exporting workflow JSON.
+- Use environment variables if self-hosting n8n.
+- Limit Telegram bot access to your user ID if needed.
+
+---
+
+## 🛠️ Customization Ideas
+
+- Add follow-up automation
+- Add email logging to Google Sheets
+- Add CRM integration
+- Add spam-score checking
+- Add conversation memory
+- Add approval step before sending
+
+---
+
+## 🧪 Example Use Cases
+
+- Sales outreach
+- Client follow-ups
+- Meeting scheduling
+- Proposal sending
+- Support responses
+- Cold emails
+
+---
+
+## 📌 Future Improvements
+
+- Multi-language support
+- Auto signature insertion
+- Attachment handling
+- Email templates
+- AI reply-to-email automation
+
+---
+
+## 👨‍💻 Author
+
+Built using n8n + OpenAI + Telegram + Gmail.
+
+---
+
+## ⭐ If You Like This Project
+
+Give it a star and improve it further 🚀
+
