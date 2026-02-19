@@ -1,0 +1,178 @@
+{
+  "name": "email automation",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        224
+      ],
+      "id": "35d8a6fd-5cae-49e8-9787-da4d085e4a81",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        32,
+        0
+      ],
+      "id": "1caa47c4-4436-4c52-9733-e8fc057c1237",
+      "name": "Telegram Trigger",
+      "webhookId": "eb5d9a12-7742-4390-846a-544bc27961ae"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are an AI Email Automation Agent.\n\nYour job is to generate a complete, ready-to-send email based on:\n1. The raw content provided by the user\n2. The recipient's email address\n3. Any optional tone or intent mentioned\n\nYou must:\n\n- Generate a clear and relevant subject line.\n- Write a well-structured, professional email body.\n- Adapt tone based on the user's message (professional, friendly, formal, sales, follow-up, etc.).\n- Improve clarity, grammar, and structure.\n- Keep the message concise unless the user explicitly asks for detailed content.\n- Never invent facts that were not provided.\n- If key details are missing, make reasonable neutral assumptions without asking follow-up questions.\n\nOutput format MUST be valid JSON only, without extra text:\n\n{\n  \"subject\": \"<email subject line>\",\n  \"body\": \"<final email body with proper paragraphs and formatting>\"\n}\n\nDo NOT include explanations.\nDo NOT include markdown.\nDo NOT include commentary.\nReturn JSON only.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        240,
+        0
+      ],
+      "id": "ffffa715-6716-4b3b-9fb6-84aae55119ba",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        336
+      ],
+      "id": "54ef205f-84e3-48b1-82e2-b673d8af3125",
+      "name": "Get many messages in Gmail",
+      "webhookId": "85e50d49-927c-4a39-80f5-32319e4d3ee7"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        0
+      ],
+      "id": "9084bf47-59c1-4596-8fee-1d43c440d49a",
+      "name": "Send a text message",
+      "webhookId": "fdc48384-9681-4e25-9aa7-2041ce68ee2f"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        208
+      ],
+      "id": "33a92256-a890-4774-94bf-d1cc319d6443",
+      "name": "Send a message in Gmail",
+      "webhookId": "ca917492-3b12-48aa-8d37-8d8ad4241092"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "571933fe-757c-478d-9ab3-eaccdbd6b6d6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5666fc5494fede05e7e5df9562cc8cc083f822fed7e78143f46cb7f550b4d4d3"
+  },
+  "id": "a3CINbF8j3f2WB68",
+  "tags": []
+}
